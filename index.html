@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Cripto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000000;
+        }
+
+        #game {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            font-size: 14px;
+            padding: 5px;
+            margin: 5px;
+            background-color: #0F52BA;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color:  #ffc300;
+        }
+
+        .upgrades-container {
+            display: flex;
+            overflow-x: scroll;
+            padding: 10px 0;
+        }
+
+        .upgrade {
+            flex: 0 0 auto;
+            max-width: 200px;
+            margin-right: 10px;
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 2px solid #a9a9a9;
+            position: relative;
+        }
+
+        .points-rectangle {
+            display: inline-block;
+            background-color: #0F52BA;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+            padding: 35px 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #a9a9a9;
+        }
+
+        @keyframes flashRed {
+            0%, 100% {
+                background-color: #FF0000;
+            }
+            50% {
+                background-color: #FF4D4D;
+            }
+        }
+
+        @keyframes flashGreen {
+            0%, 100% {
+                background-color: #008000;
+            }
+            50% {
+                background-color: #4DFF4D;
+            }
+        }
+
+        .flashRed {
+            animation: flashRed 1s infinite;
+        }
+
+        .flashGreen {
+            animation: flashGreen 1s infinite;
+        }
+
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .upgrade .star {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .upgrade .star span {
+            color: #FFD700;
+            font-size: 20px;
+            margin-right: 3px;
+        }
+
+        .prestige-button {
+            background-color: #FFD700;
+            color: black;
+            margin-top: 5px;
+            padding: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .prestige-level {
+            font-size: 12px;
+            color: #a9a9a9;
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <h1>Woo Coin</h1>
+
+        <div class="card">
+            <p>Coin per second: <span id="pointsPerSecond">0</span></p>
+            <div class="points-rectangle" id="points">0</div><br><br>
+            <button id="clicker">Click me!</button>
+        </div>
+
+        <h2>Upgrades</h2>
+        <div class="upgrades-container">
+            <div class="upgrade" id="upgrade1">
+                <h3>Farmer: +1 coin/sec</h3>
+                <p>Cost: <span class="tooltip" data-tooltip="10">10</span> coin</p>
+                <button data-upgrade="1" data-quantity="1" class="tooltip" data-tooltip="Buy 1">Buy 1</button>
+                <button data-upgrade="1" data-quantity="5" class="tooltip" data-tooltip="Buy 5">Buy 5</button>
+                <button data-upgrade="1" data-quantity="10" class="tooltip" data-tooltip="Buy 10">Buy 10</button>
+                <button data-upgrade="1" data-quantity="20" class="tooltip" data-tooltip="Buy 20">Buy 20</button>
+                <button data-upgrade="1" data-quantity="50" class="tooltip" data-tooltip="Buy 50">Buy 50</button>
+                <p>Purchased: <span id="upgrade1Count">0</span></p>
+                <p class="prestige-level" id="upgrade1PrestigeLevel">Prestige Level: 0</p>
+                <button class="prestige-button">Prestige</button>
+                <div class="star"></div>
+            </div>
+            <div class="upgrade" id="upgrade2">
+                <h3>Farm: +5 coin/sec</h3>
+                <p>Cost: <span class="tooltip" data-tooltip="25">25</span> coin</p>
+                <button data-upgrade="2" data-quantity="1" class="tooltip" data-tooltip="Buy 1">Buy 1</button>
+                <button data-upgrade="2" data-quantity="5" class="tooltip" data-tooltip="Buy 5">Buy 5</button>
+                <button data-upgrade="2" data-quantity="10" class="tooltip" data-tooltip="Buy 10">Buy 10</button>
+                <button data-upgrade="2" data-quantity="20" class="tooltip" data-tooltip="Buy 20">Buy 20</button>
+                <button data-upgrade="2" data-quantity="50" class="tooltip" data-tooltip="Buy 50">Buy 50</button>
+                <p>Purchased: <span id="upgrade2Count">0</span></p>
+                <p class="prestige-level" id="upgrade2PrestigeLevel">Prestige Level: 0</p>
+                <button class="prestige-button">Prestige</button>
+                <div class="star"></div>
+            </div>
+            <div class="upgrade" id="upgrade3">
+                <h3>Factory: +15 coin/sec</h3>
+                <p>Cost: <span class="tooltip" data-tooltip="50">50</span> coin</p>
+                <button data-upgrade="3" data-quantity="1" class="tooltip" data-tooltip="Buy 1">Buy 1</button>
+                <button data-upgrade="3" data-quantity="5" class="tooltip" data-tooltip="Buy 5">Buy 5</button>
+                <button data-upgrade="3" data-quantity="10" class="tooltip" data-tooltip="Buy 10">Buy 10</button>
+                <button data-upgrade="3" data-quantity="20" class="tooltip" data-tooltip="Buy 20">Buy 20</button>
+                <button data-upgrade="3" data-quantity="50" class="tooltip" data-tooltip="Buy 50">Buy 50</button>
+                <p>Purchased: <span id="upgrade3Count">0</span></p>
+                <p class="prestige-level" id="upgrade3PrestigeLevel">Prestige Level: 0</p>
+                <button class="prestige-button">Prestige</button>
+                <div class="star"></div>
+            </div>
+            <div class="upgrade" id="upgrade4">
+                <h3>Goverment: +30 coins/sec</h3>
+                <p>Cost: <span class="tooltip" data-tooltip="100">100</span> coins</p>
+                <button data-upgrade="4" data-quantity="1" class="tooltip" data-tooltip="Buy 1">Buy 1</button>
+                <button data-upgrade="4" data-quantity="5" class="tooltip" data-tooltip="Buy 5">Buy 5</button>
+                <button data-upgrade="4" data-quantity="10" class="tooltip" data-tooltip="Buy 10">Buy 10</button>
+                <button data-upgrade="4" data-quantity="20" class="tooltip" data-tooltip="Buy 20">Buy 20</button>
+                <button data-upgrade="4" data-quantity="50" class="tooltip" data-tooltip="Buy 50">Buy 50</button>
+                <p>Purchased: <span id="upgrade4Count">0</span></p>
+                <p class="prestige-level" id="upgrade4PrestigeLevel">Prestige Level: 0</p>
+                <button class="prestige-button">Prestige</button>
+                <div class="star"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const pointsElement = document.getElementById('points');
+        const pointsPerSecondElement = document.getElementById('pointsPerSecond');
+        const clickerButton = document.getElementById('clicker');
+        const upgradeButtons = document.querySelectorAll('[data-upgrade]');
+        const upgradeCountElements = [
+            document.getElementById('upgrade1Count'),
+            document.getElementById('upgrade2Count'),
+            document.getElementById('upgrade3Count'),
+            document.getElementById('upgrade4Count'),
+        ];
+        const upgradeCostElements = [
+            document.querySelector('#upgrade1 p:first-of-type'),
+            document.querySelector('#upgrade2 p:first-of-type'),
+            document.querySelector('#upgrade3 p:first-of-type'),
+            document.querySelector('#upgrade4 p:first-of-type'),
+        ];
+        const prestigeButtons = document.querySelectorAll('.prestige-button');
+        const upgradeCosts = [10, 25, 50, 100];
+        const upgradeEffects = [1, 5, 15, 30];
+        const MAX_PRESTIGE_LEVEL = 5;
+        const PRESTIGE_COST = 100;
+        const PRESTIGE_BOOST = 0.5;
+
+        let points = parseInt(localStorage.getItem('points')) || 0;
+        let pointsPerSecond = parseInt(localStorage.getItem('pointsPerSecond')) || 0;
+        let upgradeCounts = [
+            parseInt(localStorage.getItem('upgrade1Count')) || 0,
+            parseInt(localStorage.getItem('upgrade2Count')) || 0,
+            parseInt(localStorage.getItem('upgrade3Count')) || 0,
+            parseInt(localStorage.getItem('upgrade4Count')) || 0,
+        ];
+        let prestigeLevels = [
+            parseInt(localStorage.getItem('upgrade1Prestige')) || 0,
+            parseInt(localStorage.getItem('upgrade2Prestige')) || 0,
+            parseInt(localStorage.getItem('upgrade3Prestige')) || 0,
+            parseInt(localStorage.getItem('upgrade4Prestige')) || 0,
+        ];
+
+        function saveGameState() {
+            localStorage.setItem('points', points);
+            localStorage.setItem('pointsPerSecond', pointsPerSecond);
+            localStorage.setItem('upgrade1Count', upgradeCounts[0]);
+            localStorage.setItem('upgrade2Count', upgradeCounts[1]);
+            localStorage.setItem('upgrade3Count', upgradeCounts[2]);
+            localStorage.setItem('upgrade4Count', upgradeCounts[3]);
+            localStorage.setItem('upgrade1Prestige', prestigeLevels[0]);
+            localStorage.setItem('upgrade2Prestige', prestigeLevels[1]);
+            localStorage.setItem('upgrade3Prestige', prestigeLevels[2]);
+            localStorage.setItem('upgrade4Prestige', prestigeLevels[3]);
+        }
+
+        clickerButton.addEventListener('click', () => {
+            points += 1;
+            updatePointsDisplay();
+            saveGameState();
+        });
+
+        function updatePointsDisplay() {
+            pointsElement.textContent = Math.floor(points);
+        }
+
+        function updateUpgradeCountDisplay() {
+            upgradeCounts.forEach((count, index) => {
+                upgradeCountElements[index].textContent = count;
+            });
+        }
+
+        function updatePointsPerSecondDisplay() {
+            pointsPerSecondElement.textContent = pointsPerSecond;
+        }
+
+        function updateUpgradeCostDisplay() {
+            upgradeCosts.forEach((cost, index) => {
+                const nextCost = Math.floor(getUpgradeCost(index, 1));
+                upgradeCostElements[index].textContent = `Cost: ${nextCost} points`;
+            });
+        }
+
+        function updateUpgradePrestigeDisplay(upgradeIndex, prestigeLevel) {
+            const upgradeElement = document.getElementById(`upgrade${upgradeIndex + 1}`);
+            const starContainer = upgradeElement.querySelector('.star');
+            const prestigeLevelElement = upgradeElement.querySelector(`#upgrade${upgradeIndex + 1}PrestigeLevel`);
+
+            // Clear any existing stars
+            if (starContainer) {
+                starContainer.innerHTML = '';
+            }
+
+            if (prestigeLevel > 0) {
+                const newStarContainer = document.createElement('div');
+                newStarContainer.classList.add('star');
+
+                for (let i = 0; i < prestigeLevel; i++) {
+                    const star = document.createElement('span');
+                    star.textContent = '★';
+                    newStarContainer.appendChild(star);
+                }
+
+                // Insert the star container after the prestige button
+                const prestigeButton = upgradeElement.querySelector('.prestige-button');
+                prestigeButton.insertAdjacentElement('afterend', newStarContainer);
+            }
+
+            prestigeLevelElement.textContent = `Prestige Level: ${prestigeLevel}`;
+        }
+
+        function prestigeUpgrade(upgrade) {
+            if (upgradeCounts[upgrade] >= PRESTIGE_COST && prestigeLevels[upgrade] < MAX_PRESTIGE_LEVEL) {
+                upgradeCounts[upgrade] -= PRESTIGE_COST;
+                prestigeLevels[upgrade]++;
+                upgradeEffects[upgrade] = upgradeEffects[upgrade] + (upgradeEffects[upgrade] * prestigeLevels[upgrade] * PRESTIGE_BOOST);
+                updateUpgradeCountDisplay();
+                updatePointsPerSecondDisplay();
+                updateUpgradePrestigeDisplay(upgrade, prestigeLevels[upgrade]);
+                saveGameState();
+            }
+        }
+
+        function getUpgradeCost(upgrade, quantity) {
+            let cost = 0;
+            for (let i = 0; i < quantity; i++) {
+                cost += upgradeCosts[upgrade] * Math.pow(1.1, upgradeCounts[upgrade] + i);
+            }
+            return cost;
+        }
+
+        upgradeButtons.forEach((button) => {
+            button.addEventListener('mouseover', () => {
+                const upgrade = parseInt(button.dataset.upgrade) - 1;
+                const quantity = parseInt(button.dataset.quantity);
+                const cost = getUpgradeCost(upgrade, quantity);
+                const tooltipText = `Total Cost: ${cost.toFixed(2)} points`;
+
+                const tooltipElement = document.createElement('div');
+                tooltipElement.classList.add('tooltiptext');
+                tooltipElement.textContent = tooltipText;
+                button.appendChild(tooltipElement);
+            });
+
+            button.addEventListener('mouseout', () => {
+                const tooltipElement = button.querySelector('.tooltiptext');
+                button.removeChild(tooltipElement);
+            });
+
+            button.addEventListener('click', () => {
+                const upgrade = parseInt(button.dataset.upgrade) - 1;
+                const quantity = parseInt(button.dataset.quantity);
+                const cost = getUpgradeCost(upgrade, quantity);
+
+                if (points >= cost) {
+                    points -= cost;
+                    pointsPerSecond += upgradeEffects[upgrade] * quantity;
+                    upgradeCounts[upgrade] += quantity;
+                    updatePointsDisplay();
+                    updateUpgradeCountDisplay();
+                    updatePointsPerSecondDisplay();
+                    updateUpgradeCostDisplay();
+                    button.style.backgroundColor = 'green';
+                    setTimeout(() => {
+                        button.style.backgroundColor = '#0F52BA';
+                    }, 200);
+                    saveGameState();
+                } else {
+                    button.style.backgroundColor = 'red';
+                    setTimeout(() => {
+                        button.style.backgroundColor = '#0F52BA';
+                    }, 200);
+                }
+            });
+        });
+
+        prestigeButtons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                prestigeUpgrade(index);
+            });
+        });
+
+        setInterval(() => {
+            points += pointsPerSecond / 10;
+            updatePointsDisplay();
+            saveGameState();
+        }, 100);
+
+        // Load saved game state
+        updatePointsDisplay();
+        updateUpgradeCountDisplay();
+        updatePointsPerSecondDisplay();
+        updateUpgradeCostDisplay();
+        upgradeCounts.forEach((count, index) => {
+            updateUpgradePrestigeDisplay(index, prestigeLevels[index]);
+        });
+    </script>
+</body>
+</html>
